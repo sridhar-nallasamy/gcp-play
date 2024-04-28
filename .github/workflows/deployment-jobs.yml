@@ -44,15 +44,15 @@ jobs:
         with:
           push: true
           tags: |
-            ${{ vars.CLOUD_REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ inputs.artifact-rep }}/play-app:${{ inputs.ref }}
+            "${{ vars.CLOUD_REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ inputs.artifact-rep }}/play-app:${{ inputs.ref }}"
           build-args: |
             CLIENT_VAR=${{ vars.CLIENT_VAR }}
             SERVER_VAR=${{ vars.SERVER_VAR }}
       - name: Service Declaration
         run: |
-          export CONTAINER_IMAGE='${{ vars.CLOUD_REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ inputs.artifact-rep }}/play-app:${{ inputs.ref }}'
-          export SERVICE_NAME='play-app'
-          export SA=${{ secrets.wif-sa }}
+          export CONTAINER_IMAGE="${{ vars.CLOUD_REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ inputs.artifact-rep }}/play-app:${{ inputs.ref }}"
+          export SERVICE_NAME="play-app"
+          export SA="${{ secrets.wif-sa }}"
           envsubst < ./.github/cloud-run-service.yml > service.yml
       - name: Cloud Run Deploy
         id: deploy
