@@ -22,8 +22,8 @@ jobs:
   Deployment-Workflow:
     runs-on: ubuntu-latest
     steps:
-      # - name: Checkout
-      #   uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: GCP Auth
         id: gcp-auth
         uses: 'google-github-actions/auth@v2'
