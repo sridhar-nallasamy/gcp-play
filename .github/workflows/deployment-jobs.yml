@@ -11,6 +11,10 @@ on:
         type: string
         required: true
         description: Artifactory Repository Name
+      revision-name:
+        type: string
+        required: true
+        description: Cloud Run Revision Name
     secrets:
       wif-provider:
         required: true
@@ -18,9 +22,15 @@ on:
       wif-sa:
         required: true
         description: Workload Identity Federation Service Account
+    outputs:
+      app-url:
+        description: App deployed URL
+        value: ${{ jobs.Deployment-Workflow.outputs.deploy-outputs }}
 jobs:
   Deployment-Workflow:
     runs-on: ubuntu-latest
+    outputs:
+      deploy-outputs: ${{ steps.deploy.outputs.url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -52,6 +62,7 @@ jobs:
           export IMAGE='${{ vars.CLOUD_REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ inputs.artifact-rep }}/play-app/${{ inputs.ref }}'
           export SERVICE='play-app'
           export SA=${{ secrets.wif-sa }}
+          export REVISION_NAME=${{ inputs.revision-name }}
           envsubst < ./.github/cloud-run-service.yml > service.yml
       - name: Cloud Run Deploy
         id: deploy
@@ -60,5 +71,3 @@ jobs:
           metadata: service.yml
           service: play-app
           region: ${{ vars.CLOUD_REGION }}
-      - name: App Deployed URL
-        run: echo "🚀 App URL:${{ steps.deploy.outputs.url }}"

@@ -12,6 +12,12 @@ jobs:
     with:
       ref: ${{ github.ref }}
       artifact-rep: ${{ vars.ARTIFACT_REPO_FEATURE }}
+      revision-name: 'feature'
     secrets:
       wif-provider: ${{ secrets.WIF_PROVIDER_FEATURE }}
       wif-sa: ${{ secrets.WIF_SA_FEATURE }}
+  Feature-App-URL:
+    runs-on: ubuntu-latest
+    needs: Feature-Pipeline
+    steps:
+      - run: echo "🚀 App Successfully deployed ✅, URL:${{ needs.Feature-Pipeline.outputs.app-url }}"

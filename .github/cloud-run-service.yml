@@ -2,9 +2,12 @@ apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   name: ${SERVICE}
+  annotations:
+    run.googleapis.com/description: 'development version of the app'
 spec:
   template:
     metadata:
+      name: ${REVISION_NAME}
       annotations:
         autoscaling.knative.dev/maxScale: '10'
     spec:
@@ -15,3 +18,10 @@ spec:
   traffic:
   - percent: 100
     latestRevision: true
+  - tag: latest
+    revisionName: ${REVISION_NAME}
+  iam:
+    bindings:
+    - members:
+      - allUsers
+      role: roles/run.invoker
