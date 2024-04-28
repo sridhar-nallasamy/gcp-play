@@ -53,7 +53,7 @@ jobs:
             SERVER_VAR=${{ vars.SERVER_VAR }}
       - name: Service Declaration
         run: |
-          export IMAGE='${{ vars.CLOUD_REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ inputs.artifact-rep }}/play-app/${{ inputs.ref }}'
+          export IMAGE='${{ vars.CLOUD_REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ inputs.artifact-rep }}/play-app/${{ inputs.ref }}:latest'
           export SERVICE='play-app'
           export SA=${{ secrets.wif-sa }}
           export REVISION_NAME='play-app-${{ inputs.revision-name }}'
