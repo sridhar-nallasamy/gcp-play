@@ -22,6 +22,6 @@ spec:
     revisionName: ${REVISION_NAME}
   iam:
     bindings:
-    - members:
-      - allUsers
-      role: roles/run.invoker
+      - members:
+        - allUsers
+        role: roles/run.invoker
