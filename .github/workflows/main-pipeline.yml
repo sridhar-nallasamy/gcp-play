@@ -1,0 +1,10 @@
+name: Feature Pipeline
+run-name: ${{ github.actor }} triggered the Main Pipeline 🚀
+on:
+  push:
+    branches: [main]
+jobs:
+  Main-Pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "placeholder..."

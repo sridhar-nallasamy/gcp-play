@@ -1,0 +1,65 @@
+name: Deployment Workflow
+run-name: ${{ github.ref_name }} Deployment 🚀
+on:
+  workflow_call:
+    inputs:
+      ref:
+        type: string
+        required: true
+        description: The tag or SHA checkout
+      artifact-rep:
+        type: string
+        required: true
+        description: Artifactory Repository Name
+    secrets:
+      wif-provider:
+        required: true
+        description: Workload Identity Federtion Provider
+      wif-sa:
+        required: true
+        description: Workload Identity Federation Service Account
+jobs:
+  Deployment-Workflow:
+    runs-on: ubuntu-latest
+    steps:
+      # - name: Checkout
+      #   uses: actions/checkout@v4
+      - name: GCP Auth
+        id: gcp-auth
+        uses: 'google-github-actions/auth@v2'
+        with:
+          workload_identity_provider: ${{ secrets.wif-provider }}
+          service_account: ${{ secrets.wif-sa }}
+          token_format: 'access_token'
+      - name: Docker Auth
+        id: docker-auth
+        uses: docker/login-action@v3
+        with:
+          username: 'oauth2accesstoken'
+          password: '${{ steps.gcp-auth.outputs.access_token }}'
+          registry: '${{ vars.CLOUD_REGION }}-docker.pkg.dev'
+      - name: Build and push App image
+        id: build-image
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: |
+            ${{ vars.CLOUD_REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ inputs.artifact-rep }}/play-app:${{ inputs.ref }}
+          build-args: |
+            CLIENT_VAR=${{ vars.CLIENT_VAR }}
+            SERVER_VAR=${{ vars.SERVER_VAR }}
+      - name: Service Declaration
+        run: |
+          export CONTAINER_IMAGE='${{ vars.CLOUD_REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ inputs.artifact-rep }}/play-app:${{ inputs.ref }}'
+          export SERVICE_NAME='play-app'
+          export SA=${{ secrets.wif-sa }}
+          envsubst < ./.github/cloud-run-service.yml > service.yml
+      - name: Cloud Run Deploy
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          metadata: service.yml
+          service: play-app
+          region: ${{ vars.CLOUD_REGION }}
+      - name: App Deployed URL
+        run: echo "🚀 App URL:${{ steps.deploy.outputs.url }}"
