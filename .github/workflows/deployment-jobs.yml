@@ -71,4 +71,3 @@ jobs:
           metadata: service.yml
           service: play-app
           region: ${{ vars.CLOUD_REGION }}
-          flags: '--allow-unauthenticated'
