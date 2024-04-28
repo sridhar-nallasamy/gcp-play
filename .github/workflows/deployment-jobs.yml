@@ -22,15 +22,9 @@ on:
       wif-sa:
         required: true
         description: Workload Identity Federation Service Account
-    outputs:
-      app-url:
-        description: App deployed URL
-        value: ${{ jobs.Deployment-Workflow.outputs.deploy-outputs }}
 jobs:
   Deployment-Workflow:
     runs-on: ubuntu-latest
-    outputs:
-      deploy-outputs: ${{ steps.deploy.outputs.url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -71,3 +65,5 @@ jobs:
           metadata: service.yml
           service: play-app
           region: ${{ vars.CLOUD_REGION }}
+      - name: App URL
+        run: echo "✅ Deployed at 🚀 ${{ steps.deploy.outputs.url }}"
