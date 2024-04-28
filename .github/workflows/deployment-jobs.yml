@@ -63,7 +63,7 @@ jobs:
           export SERVICE='play-app'
           export SA=${{ secrets.wif-sa }}
           export REVISION_NAME=${{ inputs.revision-name }}
-          envsubst < ./.github/cloud-run-service.yml > service.yml
+          envsubst < ./.github/services/cloud-run-metadata.yml > service.yml
       - name: Cloud Run Deploy
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v2
@@ -71,3 +71,4 @@ jobs:
           metadata: service.yml
           service: play-app
           region: ${{ vars.CLOUD_REGION }}
+          flags: '--platform=managed --allow-unauthenticated'

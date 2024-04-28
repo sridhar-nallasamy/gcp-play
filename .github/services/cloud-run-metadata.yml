@@ -20,8 +20,3 @@ spec:
     latestRevision: true
   - tag: latest
     revisionName: ${REVISION_NAME}
-  iam:
-    bindings:
-      - members:
-        - allUsers
-        role: roles/run.invoker
