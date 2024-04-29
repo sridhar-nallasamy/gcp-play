@@ -18,5 +18,3 @@ spec:
   traffic:
   - percent: 100
     latestRevision: true
-  - tag: latest
-    revisionName: ${REVISION_NAME}
