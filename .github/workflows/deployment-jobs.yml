@@ -49,9 +49,10 @@ jobs:
             SERVER_VAR=${{ vars.SERVER_VAR }}
       - name: Service Declaration
         run: |
-          export IMAGE='${{ vars.CLOUD_REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ inputs.artifact-rep }}/play-app/${{ inputs.ref }}:latest'
+          export IMAGE='${{ vars.CLOUD_REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ inputs.artifact-rep }}/play-app/${{ inputs.ref }}'
           export SERVICE='play-app'
           export SA=${{ secrets.wif-sa }}
+          export REVISION_NAME='play-app-${{ steps.build-image.outputs.imageid }}'
           envsubst < ./.github/services/cloud-run-metadata.yml > service.yml
       - name: Cloud Run Deploy
         id: deploy
