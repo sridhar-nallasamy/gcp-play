@@ -12,6 +12,7 @@ jobs:
     with:
       ref: ${{ github.ref }}
       artifact-rep: ${{ vars.ARTIFACT_REPO_FEATURE }}
+      run-service-name: 'feature-app'
     secrets:
       wif-provider: ${{ secrets.WIF_PROVIDER_FEATURE }}
       wif-sa: ${{ secrets.WIF_SA_FEATURE }}

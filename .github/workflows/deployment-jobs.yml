@@ -11,6 +11,10 @@ on:
         type: string
         required: true
         description: Artifactory Repository Name
+      run-service-name:
+        type: string
+        required: true
+        description: Cloud Run Service Name
     secrets:
       wif-provider:
         required: true
@@ -43,23 +47,22 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: ${{ vars.CLOUD_REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ inputs.artifact-rep }}/play-app/${{ inputs.ref }}
+          tags: ${{ vars.CLOUD_REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ inputs.artifact-rep }}/${{ inputs.run-service-name }}/${{ inputs.ref }}
           build-args: |
             CLIENT_VAR=${{ vars.CLIENT_VAR }}
             SERVER_VAR=${{ vars.SERVER_VAR }}
       - name: Service Declaration
         run: |
-          export IMAGE='${{ vars.CLOUD_REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ inputs.artifact-rep }}/play-app/${{ inputs.ref }}'
-          export SERVICE='play-app'
+          export IMAGE='${{ vars.CLOUD_REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ inputs.artifact-rep }}/${{ inputs.run-service-name }}/${{ inputs.ref }}'
+          export SERVICE=${{ inputs.run-service-name }}
           export SA=${{ secrets.wif-sa }}
-          export REVISION_NAME='play-app-${{ github.run_id }}'
+          export REVISION_NAME='${{ inputs.run-service-name }}-${{ github.run_id }}'
           envsubst < ./.github/services/cloud-run-metadata.yml > service.yml
       - name: Cloud Run Deploy
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v2
         with:
           metadata: service.yml
-          service: play-app
           region: us-central1
       - name: App URL
         run: echo "✅ Deployed at 🚀 ${{ steps.deploy.outputs.url }}"
