@@ -60,6 +60,6 @@ jobs:
         with:
           metadata: service.yml
           service: play-app
-          region: ${{ vars.CLOUD_REGION }}
+          region: us-central1
       - name: App URL
         run: echo "✅ Deployed at 🚀 ${{ steps.deploy.outputs.url }}"
