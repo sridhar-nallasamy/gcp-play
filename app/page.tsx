@@ -19,7 +19,7 @@ export default function Home() {
             target='_blank'
             rel='noopener noreferrer'
           >
-            MassuU{' '}
+            LoosuUKu{' '}
             <Image
               src='/vercel.svg'
               alt='Vercel Logo'
