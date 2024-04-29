@@ -52,7 +52,7 @@ jobs:
           export IMAGE='${{ vars.CLOUD_REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ inputs.artifact-rep }}/play-app/${{ inputs.ref }}'
           export SERVICE='play-app'
           export SA=${{ secrets.wif-sa }}
-          export REVISION_NAME='play-app-${{ steps.build-image.outputs.imageid }}'
+          export REVISION_NAME='play-app-${{ github.run_id }}'
           envsubst < ./.github/services/cloud-run-metadata.yml > service.yml
       - name: Cloud Run Deploy
         id: deploy
