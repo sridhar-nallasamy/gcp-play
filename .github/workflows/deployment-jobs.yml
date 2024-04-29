@@ -11,10 +11,6 @@ on:
         type: string
         required: true
         description: Artifactory Repository Name
-      revision-name:
-        type: string
-        required: true
-        description: Cloud Run Revision Name
     secrets:
       wif-provider:
         required: true
@@ -56,7 +52,6 @@ jobs:
           export IMAGE='${{ vars.CLOUD_REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ inputs.artifact-rep }}/play-app/${{ inputs.ref }}:latest'
           export SERVICE='play-app'
           export SA=${{ secrets.wif-sa }}
-          export REVISION_NAME='play-app-${{ inputs.revision-name }}'
           envsubst < ./.github/services/cloud-run-metadata.yml > service.yml
       - name: Cloud Run Deploy
         id: deploy

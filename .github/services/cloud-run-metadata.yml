@@ -7,7 +7,6 @@ metadata:
 spec:
   template:
     metadata:
-      name: ${REVISION_NAME}
       annotations:
         autoscaling.knative.dev/maxScale: '10'
     spec:
@@ -18,5 +17,3 @@ spec:
   traffic:
   - percent: 100
     latestRevision: true
-  - tag: latest
-    revisionName: ${REVISION_NAME}
